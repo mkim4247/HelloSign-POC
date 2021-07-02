@@ -1,5 +1,5 @@
 {
-  "name": "hellosign-sdk",
+  "name": "hellosign-POC",
   "version": "1.6.1",
   "description": "HelloSign NodeJS SDK",
   "homepage": "https://github.com/clairemoo/hellosign-POC",
@@ -14,10 +14,12 @@
   "main": "server/index.js",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "axios": "^0.21.1",
     "expect": "^24.9.0",
     "express": "^4.17.1",
     "form-data": "^2.3.2",
     "hellosign-embedded": "^2.10.0",
+    "hellosign-sdk": "^1.6.1",
     "morgan": "^1.10.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
