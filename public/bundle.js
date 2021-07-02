@@ -1898,23 +1898,73 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var client = new (hellosign_embedded__WEBPACK_IMPORTED_MODULE_2___default())();
 
 var App = function App() {
-  var user = {
-    email_address: 'claire.moore@giantmachines.com',
-    name: 'Claire',
-    role: 'buyer'
-  };
-  var opts = {
+  var embeddedSignatureOpts = {
     test_mode: 1,
-    clientId: '35244ac434156570fca219c65516e3a0',
+    clientId: "35244ac434156570fca219c65516e3a0",
     signers: [{
-      email_address: user.email_address,
-      name: user.name,
-      role: user.role
+      email_address: "claire.moore@giantmachines.com",
+      name: "Claire",
+      role: "buyer"
     }],
-    files: ['/Users/clairemoore/Tech_Spikes/hellosign-POC/public/form.pdf']
+    files: ["/Users/clairemoore/Tech_Spikes/hellosign-POC/public/form.pdf"]
+  };
+  var templateSignatureOpts = {
+    test_mode: 1,
+    clientId: "35244ac434156570fca219c65516e3a0",
+    template_id: '0e3e1954d6b9c7b1ea288f5751af6b322f71d012',
+    signers: [{
+      email_address: "claire.moore@giantmachines.com",
+      name: "Claire",
+      role: "buyer"
+    }, {
+      email_address: "mooreclaire95@gmail.com",
+      name: 'test',
+      role: 'seller'
+    }],
+    custom_fields: [{
+      name: "Make",
+      value: "Honda",
+      editor: "seller",
+      required: false
+    }, {
+      name: "Model",
+      value: "Civic",
+      editor: "seller",
+      required: false
+    }, {
+      name: "Year",
+      value: "2017",
+      editor: "seller",
+      required: false
+    }, {
+      name: "Color",
+      value: "Gray",
+      editor: "seller",
+      required: false
+    }, {
+      name: "Buyer_Name",
+      value: "Claire Moore",
+      editor: "seller",
+      required: false
+    }, {
+      name: "Buyer_Address",
+      value: "123 Magic Road",
+      editor: "seller",
+      required: false
+    }, {
+      name: "Buyer_City",
+      value: "Springfield",
+      editor: "seller",
+      required: false
+    }, {
+      name: "Buyer_State",
+      value: "PA",
+      editor: "seller",
+      required: false
+    }]
   };
 
-  var handleClick = /*#__PURE__*/function () {
+  var embeddedSignatureFlow = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var res, getSign, signUrl;
       return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -1922,7 +1972,7 @@ var App = function App() {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/hellosign/signatureRequest/createEmbedded', opts);
+              return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/hellosign/signatureRequest/createEmbedded", embeddedSignatureOpts);
 
             case 2:
               res = _context.sent;
@@ -1931,14 +1981,13 @@ var App = function App() {
 
             case 5:
               getSign = _context.sent;
-              console.log(getSign.data);
               signUrl = getSign.data.embedded.sign_url;
               client.open(signUrl, {
-                clientId: '35244ac434156570fca219c65516e3a0',
+                clientId: "35244ac434156570fca219c65516e3a0",
                 skipDomainVerification: true
               });
 
-            case 9:
+            case 8:
             case "end":
               return _context.stop();
           }
@@ -1946,14 +1995,52 @@ var App = function App() {
       }, _callee);
     }));
 
-    return function handleClick() {
+    return function embeddedSignatureFlow() {
       return _ref.apply(this, arguments);
     };
   }();
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-    onClick: handleClick
-  }, "Sign a document");
+  var signUsingTemplate = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+      var res, getSign, signUrl;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/hellosign/signatureRequest/createEmbeddedWithTemplate', templateSignatureOpts);
+
+            case 2:
+              res = _context2.sent;
+              _context2.next = 5;
+              return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/hellosign/embedded/getSignUrl/".concat(res.data.signature_request.signatures[0].signature_id));
+
+            case 5:
+              getSign = _context2.sent;
+              signUrl = getSign.data.embedded.sign_url;
+              client.open(signUrl, {
+                clientId: "35244ac434156570fca219c65516e3a0",
+                skipDomainVerification: true
+              });
+
+            case 8:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function signUsingTemplate() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+    onClick: embeddedSignatureFlow
+  }, "Sign a Document with Embedded Signature Request"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+    onClick: signUsingTemplate
+  }, "Sign a Document Using a Template"));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
