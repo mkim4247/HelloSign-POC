@@ -6,8 +6,8 @@ module.exports = router;
 
 router.post('/signatureRequest/createEmbeddedWithTemplate', async (req, res, next) => {
     try {
-        const data = await hellosign.signatureRequest.createEmbeddedWithTemplate(req.body);
-        res.send(data);
+        const signatureRequstObject = await hellosign.signatureRequest.createEmbeddedWithTemplate(req.body);
+        res.send(signatureRequstObject);
     } catch (error) {
         console.log(error);
     }
@@ -15,8 +15,8 @@ router.post('/signatureRequest/createEmbeddedWithTemplate', async (req, res, nex
 
 router.get('/embedded/getSignUrl/:signature_id', async (req, res, next) => {
     try {
-        const data = await hellosign.embedded.getSignUrl(req.params.signature_id)
-        res.send(data);
+        const embeddedObject = await hellosign.embedded.getSignUrl(req.params.signature_id)
+        res.send(embeddedObject);
     } catch (error) {
         console.log(error);
     }
