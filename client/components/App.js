@@ -1,126 +1,96 @@
 import React from "react";
 import axios from "axios";
 import HelloSign from "hellosign-embedded";
+import { Formik, Form, Field } from "formik";
 const client = new HelloSign();
 
 const App = () => {
-  const embeddedSignatureOpts = {
-    test_mode: 1,
-    clientId: "35244ac434156570fca219c65516e3a0",
-    signers: [
-      {
-        email_address: "claire.moore@giantmachines.com",
-        name: "Claire",
-        role: "buyer",
-      }
-    ],
-    files: ["/Users/clairemoore/Tech_Spikes/hellosign-POC/public/form.pdf"],
-  };
 
-  const templateSignatureOpts = {
-    test_mode: 1,
-    clientId: "35244ac434156570fca219c65516e3a0",
-    template_id: '0e3e1954d6b9c7b1ea288f5751af6b322f71d012',
-    signers: [
-      {
-        email_address: "claire.moore@giantmachines.com",
-        name: "Claire",
-        role: "buyer",
-      },
-      {
-        email_address: "mooreclaire95@gmail.com",
-        name: 'test',
-        role: 'seller'
-      }
-    ],
-    custom_fields: [
-      {
-        name: "Make",
-        value: "Honda",
-        editor: "seller",
-        required: false,
-      },
-      {
-        name: "Model",
-        value: "Civic",
-        editor: "seller",
-        required: false,
-      },
-      {
-        name: "Year",
-        value: "2017",
-        editor: "seller",
-        required: false,
-      },
-      {
-        name: "Color",
-        value: "Gray",
-        editor: "seller",
-        required: false,
-      },
-      {
-        name: "Buyer_Name",
-        value: "Claire Moore",
-        editor: "seller",
-        required: false,
-      },
-      {
-        name: "Buyer_Address",
-        value: "123 Magic Road",
-        editor: "seller",
-        required: false,
-      },
-      {
-        name: "Buyer_City",
-        value: "Springfield",
-        editor: "seller",
-        required: false,
-      },
-      {
-        name: "Buyer_State",
-        value: "PA",
-        editor: "seller",
-        required: false,
-      },
-    ],
-  }
-
-  const embeddedSignatureFlow = async () => {
-    const res = await axios.post(
-      "/api/hellosign/signatureRequest/createEmbedded",
-      embeddedSignatureOpts
+  const signUsingTemplate = async (values) => {
+    const templateSignatureOpts = {
+      test_mode: 1,
+      clientId: process.env.REACT_APP_HELLOSIGN_CLIENTID,
+      template_id: "47331623d61358e19d780ece0c3f6a6bdafa8b8e",
+      signers: [
+        {
+          email_address: "claire.moore@giantmachines.com",
+          name: "Claire",
+          role: "partner",
+        },
+        {
+          email_address: "mooreclaire95@gmail.com",
+          name: "test",
+          role: "guardian",
+        },
+      ],
+      custom_fields: [
+        {
+          name: "name",
+          value: values.name,
+          editor: "guardian",
+          required: false,
+        },
+        {
+          name: "address",
+          value: values.address,
+          editor: "guardian",
+          required: false,
+        },
+        {
+          name: "city",
+          value: values.city,
+          editor: "guardian",
+          required: false,
+        },
+        {
+          name: "state",
+          value: values.state,
+          editor: "guardian",
+          required: false,
+        },
+        {
+          name: "zip",
+          value: values.zip,
+          editor: "guardian",
+          required: false,
+        },
+      ],
+    };
+    const signatureRequestObject = await axios.post(
+      "/api/hellosign/signatureRequest/createEmbeddedWithTemplate",
+      templateSignatureOpts
     );
-    const getSign = await axios.get(
-      `/api/hellosign/embedded/getSignUrl/${res.data.signature_request.signatures[0].signature_id}`
+    const embeddedObject = await axios.get(
+      `/api/hellosign/embedded/getSignUrl/${signatureRequestObject.data.signature_request.signatures[0].signature_id}`
     );
-    const signUrl = getSign.data.embedded.sign_url;
+    const signUrl = embeddedObject.data.embedded.sign_url;
     client.open(signUrl, {
-      clientId: "35244ac434156570fca219c65516e3a0",
-      skipDomainVerification: true,
-    });
-  };
-
-  const signUsingTemplate = async () => {
-    const res = await axios.post('/api/hellosign/signatureRequest/createEmbeddedWithTemplate', templateSignatureOpts);
-    const getSign = await axios.get(
-      `/api/hellosign/embedded/getSignUrl/${res.data.signature_request.signatures[0].signature_id}`
-    );
-    const signUrl = getSign.data.embedded.sign_url;
-    client.open(signUrl, {
-      clientId: "35244ac434156570fca219c65516e3a0",
+      clientId: process.env.REACT_APP_HELLOSIGN_CLIENTID,
       skipDomainVerification: true,
     });
   };
 
   return (
     <>
-      <button onClick={embeddedSignatureFlow}>
-        Sign a Document with Embedded Signature Request
-      </button>
-      <hr />
-      <button onClick={signUsingTemplate}>
-        Sign a Document Using a Template
-      </button>
+      <Formik
+        initialValues={{ name: "", address: "", city: "", state: "", zip: "" }}
+        onSubmit={(values) => {
+          signUsingTemplate(values);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <Field type="text" name="name" placeholder="Name" />
+            <Field type="text" name="address" placeholder="Address" />
+            <Field type="text" name="city" placeholder="City" />
+            <Field type="text" name="state" placeholder="State" />
+            <Field type="text" name="zip" placeholder="Zipcode" />
+            <button type="submit" disabled={isSubmitting}>
+              E-Sign
+            </button>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };

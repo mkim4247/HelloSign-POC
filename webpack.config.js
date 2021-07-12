@@ -1,3 +1,5 @@
+const Dotenv = require('dotenv-webpack');
+
 module.exports = {
     entry: [
       "@babel/polyfill",
@@ -8,6 +10,9 @@ module.exports = {
       filename: './public/bundle.js'
     },
     mode: 'development',
+    plugins: [
+      new Dotenv()
+    ],
     devtool: 'source-map',
     module: {
       rules: [
