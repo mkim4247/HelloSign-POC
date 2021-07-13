@@ -6,9 +6,7 @@ const hellosign = require("hellosign-sdk")({
 
 module.exports = router;
 
-router.post(
-  "/signatureRequest/createEmbeddedWithTemplate",
-  async (req, res, next) => {
+router.post("/signatureRequest/createEmbeddedWithTemplate", async (req, res, next) => {
     try {
       const signatureRequstObject =
         await hellosign.signatureRequest.createEmbeddedWithTemplate(req.body);

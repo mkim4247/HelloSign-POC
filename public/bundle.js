@@ -1900,9 +1900,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var client = new (hellosign_embedded__WEBPACK_IMPORTED_MODULE_2___default())();
 
 var App = function App() {
-  var signUsingTemplate = /*#__PURE__*/function () {
+  var handleClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(values) {
-      var templateSignatureOpts, signatureRequestObject, embeddedObject, signUrl;
+      var templateSignatureOpts, signatureRequestObject, signatureId, embeddedObject, signUrl;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -1914,7 +1914,8 @@ var App = function App() {
                 signers: [{
                   email_address: "claire.moore@giantmachines.com",
                   name: "Claire",
-                  role: "partner"
+                  role: "partner" // pin: "1234"
+
                 }, {
                   email_address: "mooreclaire95@gmail.com",
                   name: "test",
@@ -1952,10 +1953,11 @@ var App = function App() {
 
             case 3:
               signatureRequestObject = _context.sent;
-              _context.next = 6;
-              return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/hellosign/embedded/getSignUrl/".concat(signatureRequestObject.data.signature_request.signatures[0].signature_id));
+              signatureId = signatureRequestObject.data.signature_request.signatures[0].signature_id;
+              _context.next = 7;
+              return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/hellosign/embedded/getSignUrl/".concat(signatureId));
 
-            case 6:
+            case 7:
               embeddedObject = _context.sent;
               signUrl = embeddedObject.data.embedded.sign_url;
               client.open(signUrl, {
@@ -1963,7 +1965,7 @@ var App = function App() {
                 skipDomainVerification: true
               });
 
-            case 9:
+            case 10:
             case "end":
               return _context.stop();
           }
@@ -1971,7 +1973,7 @@ var App = function App() {
       }, _callee);
     }));
 
-    return function signUsingTemplate(_x) {
+    return function handleClick(_x) {
       return _ref.apply(this, arguments);
     };
   }();
@@ -1985,7 +1987,7 @@ var App = function App() {
       zip: ""
     },
     onSubmit: function onSubmit(values) {
-      signUsingTemplate(values);
+      handleClick(values);
     }
   }, function (_ref2) {
     var isSubmitting = _ref2.isSubmitting;

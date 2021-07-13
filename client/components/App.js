@@ -2,11 +2,13 @@ import React from "react";
 import axios from "axios";
 import HelloSign from "hellosign-embedded";
 import { Formik, Form, Field } from "formik";
+
 const client = new HelloSign();
 
 const App = () => {
 
-  const signUsingTemplate = async (values) => {
+  const handleClick = async (values) => {
+
     const templateSignatureOpts = {
       test_mode: 1,
       clientId: process.env.REACT_APP_HELLOSIGN_CLIENTID,
@@ -16,6 +18,7 @@ const App = () => {
           email_address: "claire.moore@giantmachines.com",
           name: "Claire",
           role: "partner",
+          // pin: "1234"
         },
         {
           email_address: "mooreclaire95@gmail.com",
@@ -56,18 +59,25 @@ const App = () => {
         },
       ],
     };
+
     const signatureRequestObject = await axios.post(
       "/api/hellosign/signatureRequest/createEmbeddedWithTemplate",
       templateSignatureOpts
     );
+
+    const signatureId = signatureRequestObject.data.signature_request.signatures[0].signature_id
+
     const embeddedObject = await axios.get(
-      `/api/hellosign/embedded/getSignUrl/${signatureRequestObject.data.signature_request.signatures[0].signature_id}`
+      `/api/hellosign/embedded/getSignUrl/${signatureId}`
     );
+
     const signUrl = embeddedObject.data.embedded.sign_url;
+
     client.open(signUrl, {
       clientId: process.env.REACT_APP_HELLOSIGN_CLIENTID,
       skipDomainVerification: true,
     });
+
   };
 
   return (
@@ -75,7 +85,7 @@ const App = () => {
       <Formik
         initialValues={{ name: "", address: "", city: "", state: "", zip: "" }}
         onSubmit={(values) => {
-          signUsingTemplate(values);
+          handleClick(values);
         }}
       >
         {({ isSubmitting }) => (
