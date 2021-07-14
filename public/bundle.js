@@ -1884,6 +1884,51 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _ESigForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ESigForm */ "./client/components/ESigForm.js");
+/* harmony import */ var _Success__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Success */ "./client/components/Success.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+var App = function App() {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
+      _useState2 = _slicedToArray(_useState, 2),
+      showForm = _useState2[0],
+      toggleForm = _useState2[1];
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, showForm ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_ESigForm__WEBPACK_IMPORTED_MODULE_1__.default, {
+    toggleForm: toggleForm
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Success__WEBPACK_IMPORTED_MODULE_2__.default, null));
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
+
+/***/ }),
+
+/***/ "./client/components/ESigForm.js":
+/*!***************************************!*\
+  !*** ./client/components/ESigForm.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var hellosign_embedded__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! hellosign-embedded */ "./node_modules/hellosign-embedded/index.js");
@@ -1899,7 +1944,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var client = new (hellosign_embedded__WEBPACK_IMPORTED_MODULE_2___default())();
 
-var App = function App() {
+var ESigForm = function ESigForm(props) {
   var handleClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(values) {
       var templateSignatureOpts, signatureRequestObject, signatureId, embeddedObject, signUrl;
@@ -1960,12 +2005,20 @@ var App = function App() {
             case 7:
               embeddedObject = _context.sent;
               signUrl = embeddedObject.data.embedded.sign_url;
-              client.open(signUrl, {
+              _context.next = 11;
+              return client.open(signUrl, {
                 clientId: "35244ac434156570fca219c65516e3a0",
                 skipDomainVerification: true
               });
 
-            case 10:
+            case 11:
+              _context.next = 13;
+              return client.on("finish", function () {
+                console.log('Signing was finished.');
+                props.toggleForm(false);
+              });
+
+            case 13:
             case "end":
               return _context.stop();
           }
@@ -2018,7 +2071,29 @@ var App = function App() {
   }));
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ESigForm);
+
+/***/ }),
+
+/***/ "./client/components/Success.js":
+/*!**************************************!*\
+  !*** ./client/components/Success.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+var Success = function Success() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, "Success!");
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Success);
 
 /***/ }),
 
