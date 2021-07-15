@@ -1,11 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import HelloSign from "hellosign-embedded";
 import { Formik, Form, Field } from "formik";
+import { useHistory } from "react-router-dom";
+import { Grid, Button } from "@material-ui/core";
+
+import FormikInput from "./FormikInput";
+import FormikRadio from "./FormikRadio";
+import styled from "styled-components";
 
 const client = new HelloSign();
 
-const ESigForm = (props) => {
+const FormContainer = styled.div`
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const StyledButton = styled(Button)`
+  left: 50%;
+  transform: translate(-50%, 100%);
+`;
+
+const TextContainer = styled.div`
+  margin: 20px;
+`;
+
+const ESigForm = () => {
+  const history = useHistory();
+
+  const [bankruptcy, setBankruptcy] = useState(false);
 
   const handleClick = async (values) => {
     const templateSignatureOpts = {
@@ -56,6 +81,24 @@ const ESigForm = (props) => {
           editor: "guardian",
           required: false,
         },
+        {
+          name: "SIC",
+          value: values.SIC,
+          editor: "guardian",
+          required: false,
+        },
+        {
+          name: "bankruptcy_yes",
+          value: bankruptcy === true,
+          editor: "guardian",
+          required: false,
+        },
+        {
+          name: "bankruptcy_no",
+          value: bankruptcy === false,
+          editor: "guardian",
+          required: false,
+        },
       ],
     };
 
@@ -81,35 +124,125 @@ const ESigForm = (props) => {
     // window.location.href = `${signUrl}&client_id=${process.env.REACT_APP_HELLOSIGN_CLIENTID}`
     // console.log('Client.open Url: ', url);
 
-
     await client.on("finish", () => {
-      console.log('Signing was finished.')
-      props.toggleForm(false);
+      console.log("Signing was finished.");
+      history.push("/success");
     });
   };
 
+  const handleChange = (e) => {
+    if (e.target.value === "true") {
+      setBankruptcy(true);
+    } else {
+      setBankruptcy(false);
+    }
+  };
+
   return (
-    <>
+    <FormContainer>
       <Formik
-        initialValues={{ name: "", address: "", city: "", state: "", zip: "" }}
+        initialValues={{
+          name: "",
+          address: "",
+          city: "",
+          state: "",
+          zip: "",
+          SIC: "",
+          bankruptcy_yes: false,
+          bankruptcy_no: false,
+        }}
         onSubmit={(values) => {
           handleClick(values);
         }}
       >
         {({ isSubmitting }) => (
-          <Form>
-            <Field type="text" name="name" placeholder="Name" />
-            <Field type="text" name="address" placeholder="Address" />
-            <Field type="text" name="city" placeholder="City" />
-            <Field type="text" name="state" placeholder="State" />
-            <Field type="text" name="zip" placeholder="Zipcode" />
-            <button type="submit" disabled={isSubmitting}>
-              E-Sign
-            </button>
-          </Form>
+          <>
+            <Form>
+              <Grid container>
+                <Grid item xs={4}>
+                  <Field
+                    component={FormikInput}
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                  />
+                </Grid>
+                <Grid item xs={8}>
+                  <Field
+                    component={FormikInput}
+                    type="text"
+                    name="address"
+                    placeholder="Address"
+                  />
+                </Grid>
+              </Grid>
+              <Grid container>
+                <Grid item xs={4}>
+                  <Field
+                    component={FormikInput}
+                    type="text"
+                    name="city"
+                    placeholder="City"
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Field
+                    component={FormikInput}
+                    type="text"
+                    name="state"
+                    placeholder="State"
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Field
+                    component={FormikInput}
+                    type="text"
+                    name="zip"
+                    placeholder="Zipcode"
+                  />
+                </Grid>
+              </Grid>
+              <Grid container>
+                <Grid item>
+                  <Field
+                    component={FormikInput}
+                    type="text"
+                    name="SIC"
+                    placeholder="SIC"
+                  />
+                </Grid>
+              </Grid>
+              <Grid container>
+                <Grid item xs={6}>
+                  <TextContainer>
+                    Has your business filed for bankruptcy?
+                  </TextContainer>
+                </Grid>
+                <Grid item>
+                  <Field
+                    component={FormikRadio}
+                    handleChange={handleChange}
+                    bankruptcy={bankruptcy}
+                  />
+                </Grid>
+              </Grid>
+              <Grid>
+                <Grid item xs={6}>
+                  <StyledButton
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    E-Sign
+                  </StyledButton>
+                </Grid>
+              </Grid>
+            </Form>
+          </>
         )}
       </Formik>
-    </>
+    </FormContainer>
   );
 };
 

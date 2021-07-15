@@ -1,15 +1,17 @@
-import React, { useState } from "react";
-import ESigForm from './ESigForm';
-import Success from './Success';
+import React from "react";
+import Home from "./Home";
+import Success from "./Success";
+import { withRouter, Switch, Route } from "react-router-dom";
 
 const App = () => {
-  const [showForm, toggleForm] = useState(true);
-
   return (
     <div>
-      {showForm ? <ESigForm toggleForm={toggleForm} /> : <Success />}
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/success" component={Success} />
+      </Switch>
     </div>
-  )
+  );
 };
 
-export default App;
+export default withRouter(App);
