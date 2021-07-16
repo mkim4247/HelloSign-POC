@@ -227,7 +227,7 @@ const ESigForm = () => {
                 </Grid>
               </Grid>
               <Grid>
-                <Grid item xs={6}>
+                <Grid item>
                   <StyledButton
                     variant="contained"
                     color="primary"

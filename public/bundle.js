@@ -18102,8 +18102,7 @@ var ESigForm = function ESigForm() {
       handleChange: handleChange,
       bankruptcy: bankruptcy
     }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__.default, {
-      item: true,
-      xs: 6
+      item: true
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(StyledButton, {
       variant: "contained",
       color: "primary",
